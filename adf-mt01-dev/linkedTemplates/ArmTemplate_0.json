@@ -59,33 +59,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ADF_Name",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "adf_name",
-							"value": {
-								"value": "@pipeline().DataFactory",
-								"type": "Expression"
-							}
-						}
-					},
-					{
 						"name": "pipline_run_id",
 						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ADF_Name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"secureOutput": false,
 							"secureInput": false

@@ -836,6 +836,54 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pip_getmetadata_new_copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "adls_metadata_source",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-11T12:13:17Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/adls_metadata_source')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pip_global_parameters_copy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -931,7 +979,14 @@
 					{
 						"name": "Lookup1",
 						"type": "Lookup",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -953,6 +1008,15 @@
 								"parameters": {}
 							},
 							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
 						}
 					}
 				],
@@ -1106,33 +1170,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ADF_Name",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "adf_name",
-							"value": {
-								"value": "@pipeline().DataFactory",
-								"type": "Expression"
-							}
-						}
-					},
-					{
 						"name": "pipline_run_id",
 						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ADF_Name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"secureOutput": false,
 							"secureInput": false
