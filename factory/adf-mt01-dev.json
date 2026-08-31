@@ -1,0 +1,25 @@
+{
+	"name": "adf-mt01-dev",
+	"properties": {
+		"globalParameters": {
+			"container": {
+				"type": "string",
+				"value": "azurezen2"
+			},
+			"file_path": {
+				"type": "string",
+				"value": "target"
+			}
+		},
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7bbad7a0-7ac5-4414-b7f0-341344aa30bf",
+		"tenantId": "c9a55066-39e9-4680-83a1-90fb3ecd562e"
+	}
+}

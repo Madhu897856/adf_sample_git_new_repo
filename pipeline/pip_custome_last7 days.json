@@ -1,0 +1,121 @@
+{
+	"name": "pip_custome_last7 days",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.table_list",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "select * from @{item().sourceSchema}.@{item().sourceTable}\n WHERE @{item().watermarkColumn} >= '@{formatDateTime(adddays(utcNow(),-7),'yyyy-mm-dd')}'",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "DELETE FROM @{item().sourceSchema}.@{item().sourceTable}\n WHERE @{item().watermarkColumn} >= '@{formatDateTime(adddays(utcNow(),-7),'yyyy-mm-dd')}'",
+										"type": "Expression"
+									},
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sql_custome_load",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": {
+											"value": "@item().sourceTable",
+											"type": "Expression"
+										},
+										"schema_name": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_target_custome_load",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": {
+											"value": "@item().sourceTable",
+											"type": "Expression"
+										},
+										"schema_name": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"table_list": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"sourceSchema": "dbo",
+						"sourceTable": "customers_load",
+						"watermarkColumn": "last_modified_date"
+					},
+					{
+						"sourceSchema": "dbo",
+						"sourceTable": "products_load",
+						"watermarkColumn": "last_modified_date"
+					},
+					{
+						"sourceSchema": "dbo",
+						"sourceTable": "orders_load",
+						"watermarkColumn": "last_modified_date"
+					}
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-08-26T14:23:04Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
