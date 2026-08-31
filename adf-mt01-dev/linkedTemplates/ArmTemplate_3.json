@@ -1,0 +1,304 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-mt01-dev"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pip_switch_activity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Switch1",
+						"type": "Switch",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@pipeline().parameters.piplinename",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "file1",
+									"activities": [
+										{
+											"name": "Execute Pipeline2",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pip_set_variables",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								},
+								{
+									"value": "file2",
+									"activities": [
+										{
+											"name": "Execute Pipeline3",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pip_lookup_foreach_copy_all_files",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								},
+								{
+									"value": "file3",
+									"activities": [
+										{
+											"name": "Execute Pipeline4",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pl_last_2_days_files_copy",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "pip_adls_copy_file",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"piplinename": {
+						"type": "string",
+						"defaultValue": "file1"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-18T18:07:00Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pip_switch_fail_activity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Switch1",
+						"type": "Switch",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@pipeline().parameters.piplinename",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "file1",
+									"activities": [
+										{
+											"name": "Execute Pipeline2",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pip_set_variables",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								},
+								{
+									"value": "file2",
+									"activities": [
+										{
+											"name": "Execute Pipeline3",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pip_lookup_foreach_copy_all_files",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								},
+								{
+									"value": "file3",
+									"activities": [
+										{
+											"name": "Execute Pipeline4",
+											"type": "ExecutePipeline",
+											"dependsOn": [],
+											"policy": {
+												"secureInput": false
+											},
+											"userProperties": [],
+											"typeProperties": {
+												"pipeline": {
+													"referenceName": "pl_last_2_days_files_copy",
+													"type": "PipelineReference"
+												},
+												"waitOnCompletion": true,
+												"parameters": {}
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "Fail1",
+									"type": "Fail",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"message": "pipelines will get some issues",
+										"errorCode": "401"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"piplinename": {
+						"type": "string",
+						"defaultValue": "false"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-18T18:15:59Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pip_validation_activity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Validation1",
+						"type": "Validation",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_validation_source",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"timeout": "0.00:00:50",
+							"sleep": 10,
+							"childItems": false
+						}
+					},
+					{
+						"name": "pip_adls_copy_file",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Validation1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_adls_copy_file",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-19T12:12:58Z"
+			},
+			"dependsOn": []
+		}
+	]
+}

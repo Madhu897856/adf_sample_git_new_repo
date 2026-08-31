@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-mt01-dev"
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"ls_azure_sql_password": {
+			"value": ""
+		},
+		"ls_gen2_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "practic302.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "targetfiles"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "madhumt01"
+		},
+		"ls_azure_sql_properties_typeProperties_server": {
+			"value": "practic302.database.windows.net"
+		},
+		"ls_azure_sql_properties_typeProperties_database": {
+			"value": "practice302"
+		},
+		"ls_azure_sql_properties_typeProperties_userName": {
+			"value": "madhumt01"
+		},
+		"ls_gen2_properties_typeProperties_url": {
+			"value": "https://adlsmt01gen2.dfs.core.windows.net"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
