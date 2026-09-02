@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "bank_accounts.parquet",
+				"fileName": "vfgrfrfgtr",
 				"folderPath": "source",
 				"fileSystem": "azurezen2"
 			},
