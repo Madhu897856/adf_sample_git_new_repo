@@ -10,8 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "vfgrfrfgtr",
-				"folderPath": "source",
 				"fileSystem": "azurezen2"
 			},
 			"columnDelimiter": ",",
