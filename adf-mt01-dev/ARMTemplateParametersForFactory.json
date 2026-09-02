@@ -14,6 +14,9 @@
 		"ls_gen2_accountKey": {
 			"value": ""
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://azuresqlkeyvault.vault.azure.net/"
+		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "practic302.database.windows.net"
 		},
